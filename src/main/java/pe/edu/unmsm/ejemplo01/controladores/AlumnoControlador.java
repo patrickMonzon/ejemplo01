@@ -1,26 +1,21 @@
 package pe.edu.unmsm.ejemplo01.controladores;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import pe.edu.unmsm.ejemplo01.entidades.Alumno;
-import pe.edu.unmsm.ejemplo01.repositorio.AlumnoRepositorio;
 import pe.edu.unmsm.ejemplo01.servicios.IAlumnoServicio;
 
 @RestController
 public class AlumnoControlador {
+	@Autowired
+	private Environment env;
+	
 	@Autowired
 	private IAlumnoServicio alumnoServicio;
 	
@@ -31,7 +26,9 @@ public class AlumnoControlador {
 	
 	@GetMapping("/ver/{id}")
 	public Alumno codigo(@PathVariable Integer id){	
-		return alumnoServicio.findById(id);
+		Alumno alumno = alumnoServicio.findById(id);
+		alumno.setPuerto(Integer.parseInt(env.getProperty("local.server.port")));
+		return alumno;
 	}
 	
 	@GetMapping("/codigo/{aluvccodigo}")
